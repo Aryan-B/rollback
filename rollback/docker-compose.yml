@@ -1,0 +1,43 @@
+version: "3.8"
+services:
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    # ports:
+    #   - 8080:8080
+    networks:
+      - internal
+    environment:
+      - MONGODB_URI=${MONGODB_URI}
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      - nginx
+    networks:
+      - internal
+    environment:
+      - REACT_APP_BACKEND_URL=${REACT_APP_BACKEND_URL}
+      - REACT_APP_MAPBOX_TOKEN=${REACT_APP_MAPBOX_TOKEN}
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - backend
+    networks:
+      - internal
+    ports:
+      - 5000:5000
+
+
+networks:
+  internal:
+    driver: bridge
