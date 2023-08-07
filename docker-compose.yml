@@ -6,8 +6,6 @@ services:
       dockerfile: Dockerfile
     environment:
       - MONGODB_URI=${MONGODB_URI}
-    expose:
-      - 8080
   frontend:
     build:
       context: ./frontend
